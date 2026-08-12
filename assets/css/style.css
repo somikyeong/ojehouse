@@ -387,12 +387,19 @@ section{ padding:104px 0; position:relative; }
   width:9px; height:9px; border-radius:50%;
   background:var(--rose-deep); box-shadow:0 0 0 4px rgba(255,255,255,0.9);
 }
+.city-names{ display:flex; flex-direction:column; align-items:center; gap:4px; }
 .city-name{
   font-family:var(--font-display); font-weight:400;
   font-size:clamp(25px,2.8vw,32px); line-height:1.1;
   letter-spacing:var(--display-track);
   color:var(--ink); margin:0; padding-left:var(--display-track);
 }
+/* 언어별 도시명(한국어·일본어·중국어). 영문은 값이 비어 있어 자동으로 숨겨진다 */
+.city-local{
+  font-size:12.5px; font-weight:600; letter-spacing:.02em;
+  color:var(--rose-deep); margin:0;
+}
+.city-local:empty{ display:none; }
 .city-date{
   font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.03em;
   color:var(--ink); margin:0;
@@ -421,6 +428,7 @@ section{ padding:104px 0; position:relative; }
 .city-card.is-soon{ background:rgba(255,255,255,0.34); }
 .city-card.is-soon .city-pin{ background:var(--ink-faint); }
 .city-card.is-soon .city-name{ color:var(--ink-soft); }
+.city-card.is-soon .city-local{ color:var(--ink-faint); }
 .city-card.is-soon .city-date{ color:var(--ink-faint); }
 .city-card.is-soon .city-status{
   background:rgba(74,65,56,0.05); border-color:var(--line-strong); color:var(--ink-faint);
@@ -445,7 +453,8 @@ section{ padding:104px 0; position:relative; }
     gap:8px 12px; text-align:left; padding:18px 20px;
   }
   .city-card .city-pin{ grid-area:1 / 1; }
-  .city-card .city-name{ grid-area:1 / 2; padding-left:0; }
+  .city-card .city-names{ grid-area:1 / 2; align-items:flex-start; gap:2px; }
+  .city-card .city-name{ padding-left:0; }
   .city-card .city-status{ grid-area:1 / 3; justify-self:end; margin:0; }
   .city-card .city-date{ grid-area:2 / 2 / 2 / 4; }
   .city-card .city-btn{ grid-area:3 / 1 / 3 / 4; }

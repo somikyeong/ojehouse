@@ -1,19 +1,22 @@
 (function(){
 // ===== 설정: 일본 팝업 섹션 전체 on/off (일정이 하나도 없으면 false → 섹션·내비 자동 숨김) =====
-var SHOW_TOKYO = true;
+var SHOW_JAPAN = true;
 
 // ===== 일본 순회 팝업 도시 =====
 // ▼▼▼ 일정 수정 위치 — 아래 배열만 고치면 카드가 그대로 반영됩니다 ▼▼▼
-//   name   : 카드에 표시할 영문 도시명 (디스플레이 폰트 적용)
+//   name   : 카드에 표시할 영문 도시명 (디스플레이 폰트 적용 · 모든 언어 공통)
+//   key    : 아래 I18N 사전의 도시명 키 (영문명 밑에 언어별 표기로 표시)
 //   date   : 확정 일정 문자열. 미확정이면 빈 문자열('') → "일정 조율 중"으로 표시
 //   status : 'open' → RESERVATION OPEN / 'soon' → COMING SOON
-//   show   : false 로 두면 해당 도시 카드만 숨김 (섹션 전체는 위의 SHOW_TOKYO 로 제어)
-// ※ 현재 날짜는 모두 임시값입니다. 확정 일정으로 교체하세요.
+//   show   : false 로 두면 해당 도시 카드만 숨김 (섹션 전체는 위의 SHOW_JAPAN 으로 제어)
+// ※ 카드는 배열에 적은 순서대로 나옵니다 — 순회 날짜순으로 유지하세요.
+// ※ 2026년 8·9월 출장은 4개 도시 모두 확정. 다음 출장에서 미정 도시가 생기면
+//    date: '' / status: 'soon' 으로 두면 COMING SOON 카드로 표시됩니다.
 var JAPAN_CITIES = [
-  { name: 'Tokyo',   date: '2026.09.10 — 09.15', status: 'open', show: true },
-  { name: 'Osaka',   date: '2026.09.18 — 09.21', status: 'open', show: true },
-  { name: 'Fukuoka', date: '',                   status: 'soon', show: true },
-  { name: 'Nagoya',  date: '',                   status: 'soon', show: true }
+  { name: 'Fukuoka', key: 'cityFukuoka', date: '2026.08.24 — 08.25', status: 'open', show: true },
+  { name: 'Osaka',   key: 'cityOsaka',   date: '2026.08.26 — 08.27', status: 'open', show: true },
+  { name: 'Nagoya',  key: 'cityNagoya',  date: '2026.09.13 — 09.15', status: 'open', show: true },
+  { name: 'Tokyo',   key: 'cityTokyo',   date: '2026.09.16 — 09.18', status: 'open', show: true }
 ];
 // ▲▲▲ 일정 수정 위치 ▲▲▲
 
@@ -28,7 +31,7 @@ var I18N = {
     quote: '"눈썹 한 올의 방향과 입술의 경계선, 그 미세한 차이가 얼굴 전체의 인상을 바꿉니다."',
     f1k: '운영 형태', f1v: '1인 시술자 · 완전 예약제',
     f2k: '취급 시술', f2v: '눈썹 반영구, 입술 반영구',
-    f3k: '운영 지역', f3v: '서울 매장, 일본 순회 팝업(도쿄·오사카·후쿠오카·나고야)',
+    f3k: '운영 지역', f3v: '서울 매장, 일본 순회 팝업(후쿠오카·오사카·나고야·도쿄)',
     f4k: '상담 언어', f4v: '한국어 상담만 가능 · 사진/번역으로 진행 · 통역사 요청 가능',
     svKo: '지역 물가를 반영해 국가·지역별 가격을 분리해 안내합니다',
     browKo: '눈썹 반영구', lipKo: '입술 반영구',
@@ -48,6 +51,7 @@ var I18N = {
     q2: '해외에서도 예약할 수 있나요?',
     a2: '네, 가능합니다. 다만 상담은 한국어로만 진행됩니다. 원하시는 스타일 사진과 번역 기능을 함께 활용하면 상담과 시술 진행에 대부분 문제가 없습니다. 소통이 많이 어려운 경우에는 예약일 4일 전까지 요청해 주시면 통역사를 준비해 드립니다(시간당 30,000원).',
     japanNote: '정확한 장소는 예약금 확인 후 안내드립니다.',
+    cityFukuoka: '후쿠오카', cityOsaka: '오사카', cityNagoya: '나고야', cityTokyo: '도쿄',
     cityTba: '일정 조율 중',
     cityBtn: '문의하기',
     cityBtnSoon: '오픈 알림 문의',
@@ -74,7 +78,7 @@ var I18N = {
     quote: '"The direction of a single brow hair, the border of the lips — these subtle differences change the entire impression."',
     f1k: 'Studio', f1v: 'Single artist · By appointment only',
     f2k: 'Services', f2v: 'Brow PMU, Lip PMU',
-    f3k: 'Locations', f3v: 'Seoul studio, Japan pop-up tour (Tokyo · Osaka · Fukuoka · Nagoya)',
+    f3k: 'Locations', f3v: 'Seoul studio, Japan pop-up tour (Fukuoka · Osaka · Nagoya · Tokyo)',
     f4k: 'Consultation', f4v: 'Korean only · Photos & translation apps · Interpreter available on request',
     svKo: 'Prices are listed separately by country and region.',
     browKo: 'Eyebrow Permanent Makeup', lipKo: 'Lip Permanent Makeup',
@@ -94,6 +98,8 @@ var I18N = {
     q2: 'Can I book from overseas?',
     a2: 'Yes. Please note that consultations are conducted in Korean only. With reference photos and a translation app, the consultation and the procedure itself go smoothly in almost every case. If communication is still difficult, let us know at least 4 days before your appointment and we will arrange an interpreter (KRW 30,000 per hour).',
     japanNote: 'The exact venue is shared after deposit confirmation.',
+    // 영문에서는 카드 상단 영문 도시명과 겹치므로 비워 둔다 (.city-local:empty → 숨김)
+    cityFukuoka: '', cityOsaka: '', cityNagoya: '', cityTokyo: '',
     cityTba: 'DATES TBA',
     cityBtn: 'Contact',
     cityBtnSoon: 'Notify me',
@@ -120,7 +126,7 @@ var I18N = {
     quote: '「眉一本の流れ、唇の輪郭線。その繊細な差が、顔全体の印象を変えます。」',
     f1k: '運営形態', f1v: '施術者1名 · 完全予約制',
     f2k: '施術内容', f2v: '眉アートメイク、リップアートメイク',
-    f3k: 'エリア', f3v: 'ソウル店舗、日本巡回ポップアップ（東京・大阪・福岡・名古屋）',
+    f3k: 'エリア', f3v: 'ソウル店舗、日本巡回ポップアップ（福岡・大阪・名古屋・東京）',
     f4k: 'カウンセリング', f4v: '韓国語のみ · 写真と翻訳アプリで対応 · 通訳の手配可',
     svKo: '国・地域ごとに料金を分けてご案内しています。',
     browKo: '眉アートメイク', lipKo: 'リップアートメイク',
@@ -140,6 +146,7 @@ var I18N = {
     q2: '海外からでも予約できますか？',
     a2: 'はい、可能です。ただし、カウンセリングは韓国語のみで行っております。ご希望のデザイン写真と翻訳アプリを併用すれば、カウンセリングも施術もほとんどの場合問題なく進められます。意思疎通が難しい場合は、ご予約日の4日前までにお申し付けいただければ通訳者を手配いたします（1時間あたり30,000ウォン）。',
     japanNote: '正確な場所は予約金確認後にご案内します。',
+    cityFukuoka: '福岡', cityOsaka: '大阪', cityNagoya: '名古屋', cityTokyo: '東京',
     cityTba: '日程調整中',
     cityBtn: 'お問い合わせ',
     cityBtnSoon: '日程のお知らせ希望',
@@ -166,7 +173,7 @@ var I18N = {
     quote: '"一根眉毛的走向、唇部的轮廓线，这些细微的差别足以改变整张脸的印象。"',
     f1k: '经营形式', f1v: '一人技师 · 完全预约制',
     f2k: '服务项目', f2v: '眉部半永久、唇部半永久',
-    f3k: '服务地区', f3v: '首尔门店、日本巡回快闪（东京·大阪·福冈·名古屋）',
+    f3k: '服务地区', f3v: '首尔门店、日本巡回快闪（福冈·大阪·名古屋·东京）',
     f4k: '咨询语言', f4v: '仅限韩语 · 借助照片与翻译工具沟通 · 可申请翻译人员',
     svKo: '根据各国家/地区物价分别标示价格。',
     browKo: '眉部半永久', lipKo: '唇部半永久',
@@ -186,6 +193,7 @@ var I18N = {
     q2: '在海外也可以预约吗？',
     a2: '可以。不过咨询仅以韩语进行。配合参考照片与翻译工具，咨询和操作在绝大多数情况下都能顺利进行。若沟通确实困难，请在预约日的4天前提出申请，我们可为您安排翻译人员（每小时30,000韩元）。',
     japanNote: '确切地点将在确认定金后告知。',
+    cityFukuoka: '福冈', cityOsaka: '大阪', cityNagoya: '名古屋', cityTokyo: '东京',
     cityTba: '日程协调中',
     cityBtn: '咨询',
     cityBtnSoon: '日程开放通知',
@@ -218,7 +226,10 @@ function renderCities() {
     var open = c.status === 'open';
     return '<article class="city-card ' + (open ? 'is-open' : 'is-soon') + '">' +
       '<span class="city-pin" aria-hidden="true"></span>' +
-      '<p class="city-name">' + c.name + '</p>' +
+      '<div class="city-names">' +
+        '<p class="city-name">' + c.name + '</p>' +
+        '<p class="city-local" data-i18n="' + (c.key || '') + '">' + (I18N.ko[c.key] || '') + '</p>' +
+      '</div>' +
       (c.date
         ? '<p class="city-date">' + c.date + '</p>'
         : '<p class="city-date" data-i18n="cityTba">' + I18N.ko.cityTba + '</p>') +
@@ -269,7 +280,7 @@ document.querySelectorAll('.lang-switch button').forEach(function(btn) {
 });
 
 // 일본 팝업 섹션 토글 (기획서 09: 일정 없으면 비노출)
-if (SHOW_TOKYO) {
+if (SHOW_JAPAN) {
   renderCities();
 } else {
   var s = document.getElementById('japan');
