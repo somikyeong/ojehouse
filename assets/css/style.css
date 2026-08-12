@@ -47,6 +47,10 @@ body{
   color:var(--ink);
   font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;
   font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased;
+  /* 줄바꿈은 글자 단위가 아니라 단어(어절) 단위로 — 문서 전체에 상속된다.
+     한 단어가 줄 폭보다 길 때만 overflow-wrap 이 예외적으로 끊어 넘침을 막는다. */
+  word-break:keep-all;
+  overflow-wrap:break-word;
 }
 a{ color:inherit; } img{ max-width:100%; display:block; } button{ font-family:inherit; cursor:pointer; }
 :focus-visible{ outline:2px solid var(--rose-deep); outline-offset:3px; border-radius:4px; }
@@ -280,7 +284,7 @@ section{ padding:104px 0; position:relative; }
 .notice-body{ padding:0 clamp(18px,3vw,26px) 24px; }
 .notice-body p{
   margin:0 0 12px; font-size:13.5px; line-height:1.8;
-  color:var(--ink-soft); word-break:keep-all;
+  color:var(--ink-soft);
 }
 .notice-body p:last-child{ margin-bottom:0; }
 .notice-body .notice-foot{
@@ -357,7 +361,7 @@ section{ padding:104px 0; position:relative; }
 .faq-q .icon::after{ width:1px; height:14px; }
 .faq-q[aria-expanded="true"] .icon::after{ opacity:0; transform:translate(-50%,-50%) rotate(90deg); }
 .faq-a{ overflow:hidden; max-height:0; transition:max-height .3s var(--ease); }
-.faq-a p{ margin:0 0 24px; padding:0 4px 0 40px; color:var(--ink-soft); font-size:14px; line-height:1.75; word-break:keep-all; }
+.faq-a p{ margin:0 0 24px; padding:0 4px 0 40px; color:var(--ink-soft); font-size:14px; line-height:1.75; }
 
 /* ===== Japan Pop-up — 도시별 순회 카드 ===== */
 .japan{ background:linear-gradient(180deg, rgba(255,255,255,0.7), rgba(246,241,234,0.4)); }
@@ -578,6 +582,5 @@ footer.site{
 .modal-steps{
   background:var(--bg); border-radius:var(--radius-s); padding:16px 18px;
   font-size:12.5px; color:var(--ink-soft); line-height:1.8;
-  word-break:keep-all;
 }
 .modal-steps strong{ color:var(--rose-deep); font-weight:600; }
