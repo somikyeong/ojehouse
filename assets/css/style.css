@@ -205,7 +205,6 @@ section{ padding:104px 0; position:relative; }
 .about-facts li{
   display:flex; 
   gap:16px; 
-  min-width: 450px;
   font-size:14.5px; color:var(--ink-soft);
   padding:13px 0; border-bottom:1px solid var(--line);
 }
