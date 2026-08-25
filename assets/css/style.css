@@ -131,16 +131,23 @@ header.site{
   text-transform:uppercase; color:rgba(255,255,255,0.95);
   margin:0 0 26px; text-shadow:0 1px 10px rgba(150,105,72,0.35);
 }
-/* 로고 — 디스플레이 폰트. Italiana는 획이 얇아 자간을 넓게 잡아야 균형이 맞습니다. */
+/* 로고 — 세로형 로고 이미지. 튤 배경 위에 얹히므로 화이트 버전을 쓰고,
+   폭이 아닌 높이(뷰포트 높이 기준)로 크기를 잡아 화면이 낮아도 잘리지 않게 한다. */
 .hero-logo{
-  font-family:var(--font-display); font-weight:400;
-  /* Italiana는 Cormorant보다 가로폭이 넓어, 좁은 화면에서 넘치지 않도록
-     하한을 고정값 대신 vw 기울기(15vw)로 잡는다 */
-  font-size:clamp(46px, 15vw, 168px);
-  letter-spacing:var(--display-track); line-height:1;
-  text-decoration:none; color:#fff; display:block;
-  margin:0 0 30px; padding-left:var(--display-track); /* 자간이 만든 우측 여백 보정 */
-  text-shadow:0 2px 30px rgba(150,105,72,0.4);
+  display:block; line-height:0;
+  margin:0 0 30px;
+  transition:opacity .2s var(--ease);
+}
+.hero-logo img{
+  display:block; width:auto; max-width:100%;
+  height:clamp(140px, 30vh, 290px);
+  margin:0 auto;
+  filter:drop-shadow(0 2px 26px rgba(150,105,72,0.42));
+}
+.hero-logo:hover{ opacity:.9; }
+/* 낮은 뷰포트(가로 모드 등)에서 CTA가 접히지 않도록 로고 주변 여백을 줄인다 */
+@media (max-height:720px){
+  .hero-logo{ margin-bottom:18px; }
 }
 .hero .sub-ko{
   font-size:clamp(14.5px,1.9vw,16.5px); line-height:1.8;
@@ -214,6 +221,62 @@ section{ padding:104px 0; position:relative; }
 }
 .about-facts li:first-child{ border-top:1px solid var(--line); }
 .about-facts strong{ color:var(--ink); font-weight:600; min-width:96px; flex-shrink:0; }
+
+/* ===== Artist — 사장님(1인 시술자) 소개 =====
+   위쪽: 소개 문구 + 프로필 1장, 아래쪽: 시술 장면 2장.
+   사진은 모두 세로(4:5) 박스이며 캡션 스타일은 포트폴리오와 공유한다. */
+.artist{ background:linear-gradient(180deg, rgba(246,241,234,0.55), rgba(255,255,255,0.55)); }
+.artist-grid{
+  display:grid; grid-template-columns:1fr 0.78fr; gap:clamp(30px,5vw,64px);
+  align-items:center;
+}
+/* 그리드 칸이 사진·긴 문장의 최소 폭에 밀려 넓어지지 않게 한다(모바일 가로 스크롤 방지) */
+.artist-grid > *, .artist-work figure{ min-width:0; }
+@media (max-width:860px){ .artist-grid{ grid-template-columns:1fr; } }
+.artist-name{
+  font-family:var(--font-display); font-weight:400;
+  font-size:clamp(30px,4vw,42px); line-height:1.1; letter-spacing:var(--display-track);
+  color:var(--ink); margin:0 0 8px;
+}
+.artist-role{
+  display:flex; align-items:center; gap:10px;
+  font-size:14.5px; font-weight:600; color:var(--rose-deep); margin:0 0 22px;
+}
+.artist-role::before{ content:""; width:14px; height:1px; background:var(--rose-deep); flex-shrink:0; }
+.artist-bio{ font-size:14.5px; color:var(--ink-soft); margin:0; }
+
+/* 프로필 — 세로 1장 */
+.artist-portrait{
+  margin:0; overflow:hidden; border-radius:var(--radius);
+  box-shadow:0 16px 44px rgba(140,105,80,0.16);
+}
+.artist-portrait img{ width:100%; aspect-ratio:4/5; object-fit:cover; object-position:50% 22%; }
+@media (max-width:860px){
+  /* 1단으로 접히면 프로필이 너무 커지므로 폭을 묶어 가운데 정렬 */
+  .artist-portrait{ max-width:420px; margin:0 auto; }
+  .artist-work{ margin-left:auto; margin-right:auto; }
+}
+
+/* 시술 사진 — 세로 2장을 어긋나게(스태거) 두어 대각선 흐름을 만든다.
+   왼쪽 사진은 위로 올라와 소개 문구 아래 여백을 채우고, 오른쪽 사진은 .aw2 만큼 내려간다.
+   블록을 오른쪽에 맞춰 두 번째 사진이 위쪽 프로필과 같은 축·같은 폭으로 떨어지게 한다. */
+.artist-work{
+  display:grid; grid-template-columns:1fr 1fr; gap:clamp(14px,2.5vw,26px);
+  align-items:start;
+  max-width:880px; margin:clamp(18px,3vw,34px) 0 0 auto;
+}
+.artist-work .aw2{ margin-top:clamp(30px,6vw,76px); }
+.artist-work figure{ margin:0; position:relative; overflow:hidden; border-radius:var(--radius); }
+.artist-work img{
+  width:100%; aspect-ratio:4/5; object-fit:cover; object-position:50% 50%;
+  transition:transform .5s var(--ease);
+}
+.artist-work figure:hover img{ transform:scale(1.03); }
+@media (max-width:560px){
+  /* 2단으로 두면 세로 사진이 썸네일처럼 작아지므로 한 장씩 세로로 쌓고 엇갈림은 해제 */
+  .artist-work{ grid-template-columns:1fr; max-width:420px; gap:14px; }
+  .artist-work .aw2{ margin-top:0; }
+}
 
 /* ===== Services ===== */
 .services{ background:linear-gradient(180deg, rgba(245,235,224,0.3), rgba(243,227,213,0.6) 55%, rgba(243,229,217,0.35)); }
@@ -298,7 +361,8 @@ section{ padding:104px 0; position:relative; }
 .pf-grid figure{ margin:0; overflow:hidden; border-radius:var(--radius); position:relative; }
 .pf-grid img{ width:100%; height:100%; object-fit:cover; transition:transform .5s var(--ease); }
 .pf-grid figure:hover img{ transform:scale(1.03); }
-.pf-grid figcaption{
+.pf-grid figcaption,
+.artist-work figcaption{
   position:absolute; left:12px; bottom:10px;
   font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.1em;
   color:#fff; background:rgba(110,88,68,0.45); padding:5px 10px; border-radius:999px;
@@ -516,9 +580,22 @@ section{ padding:104px 0; position:relative; }
 }
 .map-embed{
   display:block; width:100%; aspect-ratio:16/11; border:0;
-  /* 구글 지도 기본 채도를 낮춰 페이지의 웜톤 팔레트와 어울리게 */
-  filter:saturate(0.72) contrast(0.96) sepia(0.12);
+  /* 네이버 지도 기본 채도를 낮춰 페이지의 웜톤 팔레트와 어울리게 */
+  filter:saturate(0.78) contrast(0.97) sepia(0.1);
 }
+.map-embed[hidden]{ display:none; }
+/* 지도 대체 화면 — 인증 키 미설정 · 스크립트 로딩 실패 시 */
+.map-fallback{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:6px; width:100%; aspect-ratio:16/11; padding:24px; text-align:center;
+}
+.map-fallback[hidden]{ display:none; }
+.map-fallback-pin{
+  width:14px; height:14px; border-radius:50% 50% 50% 0;
+  transform:rotate(-45deg); background:var(--rose);
+  box-shadow:0 4px 12px rgba(179,131,98,0.35);
+}
+.map-fallback-addr{ margin:10px 0 0; font-size:14px; color:var(--ink-soft); }
 .map-link{
   display:inline-block; margin-top:22px; font-size:13px; letter-spacing:.02em;
   color:var(--rose-deep); text-decoration:none; border-bottom:1px solid rgba(179,131,98,0.4);
