@@ -631,7 +631,9 @@ footer.site{
 }
 .footer-logo img{
   display:block; width:auto; max-width:100%;
-  height:clamp(62px, 9vw, 84px);
+  /* 모바일에서 로고가 과하게 커 보이지 않도록 최소 높이를 낮춘다.
+     약 510px 이하부터 9vw 대신 46px 고정 — 데스크톱 크기는 그대로. */
+  height:clamp(46px, 9vw, 84px);
   margin:0 auto;
 }
 .footer-logo:hover{ opacity:.72; }
