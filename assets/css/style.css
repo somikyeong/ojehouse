@@ -193,6 +193,16 @@ section{ padding:104px 0; position:relative; }
 .intro{ text-align:center; padding-bottom:76px; }
 .intro .sec-title{ margin-bottom:22px; }
 .intro .copy{ max-width:520px; margin:0 auto; font-size:15px; color:var(--ink-soft); }
+/* 인트로 카피는 두 문장 = 두 줄을 유지한다. 좁은 화면에서 첫 문장이 접혀 3줄이 되지 않도록
+   줄바꿈을 막고(<br> 은 그대로 동작) 글자 크기를 화면 폭에 맞춰 줄인다.
+   29 = 첫 문장의 글자 폭 합(약 28.2em)에 여유를 더한 값. 48px 은 .wrap 좌우 패딩.
+   문장 길이가 언어마다 크게 달라 한국어에만 적용한다. */
+@media (max-width:760px){
+  html[lang="ko"] .intro .copy{
+    white-space:nowrap;
+    font-size:min(15px, calc((100vw - 48px) / 29));
+  }
+}
 .intro .divider{ width:1px; height:56px; background:var(--line-strong); margin:36px auto 0; }
 
 /* ===== About ===== */
@@ -613,12 +623,18 @@ footer.site{
   padding:56px 0 36px; text-align:center;
   border-top:1px solid var(--line);
 }
-/* 푸터 로고 — 디스플레이 폰트 + 넓은 자간 */
+/* 푸터 로고 — 밝은 푸터 배경에 맞춘 잉크 버전(히어로는 화이트 버전).
+   이미지에 OJEHOUSE 워드마크가 포함돼 있어 별도 텍스트를 두지 않는다. */
 .footer-logo{
-  font-family:var(--font-display); font-size:30px; font-weight:400;
-  letter-spacing:.32em; color:var(--ink); text-decoration:none;
-  display:inline-block; margin-left:.32em; /* 자간 보정 */
+  display:inline-block; line-height:0; text-decoration:none;
+  transition:opacity .2s var(--ease);
 }
+.footer-logo img{
+  display:block; width:auto; max-width:100%;
+  height:clamp(62px, 9vw, 84px);
+  margin:0 auto;
+}
+.footer-logo:hover{ opacity:.72; }
 .footer-nav{ margin:22px 0 30px; }
 .footer-nav a{ text-decoration:none; font-size:13.5px; color:var(--ink-soft); margin:0 14px; }
 .footer-nav a:hover{ color:var(--rose-deep); }
